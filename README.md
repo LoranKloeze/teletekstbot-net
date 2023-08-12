@@ -1,4 +1,5 @@
-![alt text](https://github.com/LoranKloeze/teletekstbot-net/actions/workflows/dotnet.yml/badge.svg)
+![alt text](https://github.com/LoranKloeze/teletekstbot-net/actions/workflows/test.yml/badge.svg)
+![alt text](https://github.com/LoranKloeze/teletekstbot-net/actions/workflows/test_and_deploy.yml/badge.svg)
 # Teletekstbot
 This bot tries to detect newly pushed Teletekst pages from the NOS
 and posts them to Bluesky and Mastodon.
