@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeletekstBot.Domain", "TeletekstBot.Domain\TeletekstBot.Domain.csproj", "{37BB584F-2B9F-43E5-8EC2-8EE96A0CE553}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeletekstBot.BotService", "TeletekstBot.BotService\TeletekstBot.BotService.csproj", "{4E75163B-6E6A-47FC-B6CF-2D07DBE79E5B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{57DDF94B-D680-4767-BF48-68EB08F577B4}"
+	ProjectSection(SolutionItems) = preProject
+		Dockerfile = Dockerfile
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeletekstBot.Infrastructure", "TeletekstBot.Infrastructure\TeletekstBot.Infrastructure.csproj", "{DBD2FF97-E298-4A2F-8342-B46C04CC6EDD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeletekstBot.Application", "TeletekstBot.Application\TeletekstBot.Application.csproj", "{C8CDA4A8-676B-4897-BF27-65C3AEA9C2ED}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{70792B33-AE66-4AB9-887E-E8AC62D22413}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeletekstBot.Tests", "TeletekstBot.Tests\TeletekstBot.Tests.csproj", "{272223B3-F03B-44E3-9D9C-BB1C2A7EF973}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{37BB584F-2B9F-43E5-8EC2-8EE96A0CE553}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37BB584F-2B9F-43E5-8EC2-8EE96A0CE553}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37BB584F-2B9F-43E5-8EC2-8EE96A0CE553}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37BB584F-2B9F-43E5-8EC2-8EE96A0CE553}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E75163B-6E6A-47FC-B6CF-2D07DBE79E5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E75163B-6E6A-47FC-B6CF-2D07DBE79E5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E75163B-6E6A-47FC-B6CF-2D07DBE79E5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E75163B-6E6A-47FC-B6CF-2D07DBE79E5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBD2FF97-E298-4A2F-8342-B46C04CC6EDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBD2FF97-E298-4A2F-8342-B46C04CC6EDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBD2FF97-E298-4A2F-8342-B46C04CC6EDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBD2FF97-E298-4A2F-8342-B46C04CC6EDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8CDA4A8-676B-4897-BF27-65C3AEA9C2ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8CDA4A8-676B-4897-BF27-65C3AEA9C2ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8CDA4A8-676B-4897-BF27-65C3AEA9C2ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8CDA4A8-676B-4897-BF27-65C3AEA9C2ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{272223B3-F03B-44E3-9D9C-BB1C2A7EF973}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{272223B3-F03B-44E3-9D9C-BB1C2A7EF973}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{272223B3-F03B-44E3-9D9C-BB1C2A7EF973}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{272223B3-F03B-44E3-9D9C-BB1C2A7EF973}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

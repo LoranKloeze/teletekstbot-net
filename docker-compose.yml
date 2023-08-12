@@ -1,0 +1,27 @@
+﻿version: '3.8'
+services:
+  dotnet-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment: 
+      - Mastodon__AccessToken
+      - Bluesky__Password
+      - Bluesky__Handle
+    
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_started  
+      chrome:
+        condition: service_healthy
+  redis:
+    image: "redis:latest"
+
+  chrome:
+    image: "browserless/chrome:latest"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:3000" ]
+      interval: 2s
+      timeout: 2s
+      retries: 5

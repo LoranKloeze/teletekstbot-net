@@ -1,0 +1,22 @@
+name: Bring app online
+
+on:
+  workflow_dispatch:
+
+jobs:
+  take-offline:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add host key verification
+        run: |
+          echo "${{ secrets.SSH_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
+          
+      - name: Run docker compose down
+        run: |
+          ssh -A ${{ vars.SSH_USER}}@${{ secrets.REMOTE_HOST }} "cd /apps/teletekstbot-net && docker compose up -d"
+    

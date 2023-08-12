@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>dotnet-TeletetekstBot.BotService-D42DAA00-B519-4C01-BBDE-A0D77997A185</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Bluesky.Net" Version="0.4.0-alpha" />
+        <PackageReference Include="MediatR" Version="12.1.1" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1"/>
+        <PackageReference Include="PuppeteerSharp" Version="10.1.2" />
+        <PackageReference Include="Serilog" Version="3.0.1" />
+        <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+        <PackageReference Include="StackExchange.Redis" Version="2.6.122" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\TeletekstBot.Application\TeletekstBot.Application.csproj" />
+      <ProjectReference Include="..\TeletekstBot.Infrastructure\TeletekstBot.Infrastructure.csproj" />
+    </ItemGroup>
+</Project>
