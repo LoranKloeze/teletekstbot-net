@@ -45,7 +45,7 @@ public class TheBotTests
         _fetchScreenshotFromNos.Get(104).Returns("samplePath");
         _fetchScreenshotFromNos.Get(105).Returns("samplePath");
 
-        const int delayBetweenPageFetching = 50;
+        const int delayBetweenPageFetching = 0;
 
         // Act
         await _theBot.Run(delayBetweenPageFetching, false, CancellationToken.None);
@@ -65,7 +65,7 @@ public class TheBotTests
         _fetchPageFromNos.Get(104, Arg.Any<CancellationToken>()).Returns(page);
         _pageStore.TitlePageNrExist("SampleTitle", 104).Returns(true);
 
-        const int delayBetweenPageFetching = 50;
+        const int delayBetweenPageFetching = 0;
 
         // Act
         await _theBot.Run(delayBetweenPageFetching, false, CancellationToken.None);
@@ -81,7 +81,7 @@ public class TheBotTests
         _env.EnvironmentName.Returns("Production");
         _fetchPageFromNos.Get(104, Arg.Any<CancellationToken>()).Returns((Page)null!);
 
-        const int delayBetweenPageFetching = 50;
+        const int delayBetweenPageFetching = 0;
 
         // Act
         await _theBot.Run(delayBetweenPageFetching, false, CancellationToken.None);
