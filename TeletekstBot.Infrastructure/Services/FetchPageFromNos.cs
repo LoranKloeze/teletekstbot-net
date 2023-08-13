@@ -34,6 +34,31 @@ public class FetchPageFromNos : IFetchPageFromNos
     
     public async Task<(string, Domain.Entities.Page?)> GetPageAndScreenshot(int pageNr)
     {
+        _logger.LogInformation("Retrieving page {PageNr} from NOS", pageNr);
+        
+        var browserPage = await SetupBrowserPage($"{NosUrl}#{pageNr}"); 
+        
+        var html = await browserPage.GetContentAsync();
+        _teletekstHtmlParserParser.LoadHtml(html);
+        
+        if (!_teletekstHtmlParserParser.IsANewsPage())
+        {
+            return (string.Empty, null);
+        }
+
+        var nosPage = _teletekstHtmlParserParser.ToPage();
+        nosPage.PageNumber = pageNr;
+        
+        var screenshotPath = Path.Combine(Path.GetTempPath(), $"screenshot_{pageNr}.png");
+        await CreateScreenshot(browserPage, screenshotPath);
+
+        _logger.LogInformation("Screenshot and page created at {FilePath} for page {PageNr}", screenshotPath, pageNr);
+        
+        return (screenshotPath, nosPage);
+    }
+    
+    private async Task<IPage> SetupBrowserPage(string url)
+    {
         var browser = await _browserFactory.Create();
         var browserPage = await browser.NewPageAsync();
         await browserPage.SetViewportAsync(new ViewPortOptions
@@ -42,26 +67,15 @@ public class FetchPageFromNos : IFetchPageFromNos
             Height = ViewPortHeight
             
         });
-        
-        _logger.LogInformation("Retrieving page {PageNr} from NOS", pageNr);
-
-        var filePath = Path.Combine(Path.GetTempPath(), $"screenshot_{pageNr}.png");
-        
-        await browserPage.GoToAsync($"{NosUrl}#{pageNr}");
+        await browserPage.GoToAsync(url);
         await browserPage.WaitForNetworkIdleAsync();
-        
-        _logger.LogInformation("Retrieving html for page {PageNr}", pageNr);
-        var html = await browserPage.GetContentAsync();
-        _teletekstHtmlParserParser.LoadHtml(html);
-        if (!_teletekstHtmlParserParser.IsANewsPage())
-        {
-            return (string.Empty, null);
-        }
 
-        var page = _teletekstHtmlParserParser.ToPage();
-        page.PageNumber = pageNr;
-
-        await browserPage.ScreenshotAsync(filePath, new ScreenshotOptions
+        return browserPage;
+    }
+    
+    private static async Task CreateScreenshot(IPage browserPage, string screenshotPath)
+    {
+        await browserPage.ScreenshotAsync(screenshotPath, new ScreenshotOptions
         {
             Clip = new Clip
             {
@@ -71,8 +85,5 @@ public class FetchPageFromNos : IFetchPageFromNos
                 Y = ClipStartY
             }
         });
-
-        _logger.LogInformation("Screenshot and page created at {FilePath} for page {PageNr}", filePath, pageNr);
-        return (filePath, page);
     }
 }
