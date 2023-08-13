@@ -34,7 +34,7 @@ public static class InfrastructureExtension
         serviceCollection.AddTransient<IBlueSkyService, BlueSkyService>();
         serviceCollection.AddTransient<IPageStore, PageStore>();
         serviceCollection.AddSingleton<IBrowserFactory, BrowserFactory>();
-        serviceCollection.AddTransient<IFetchScreenshotFromNos, FetchScreenshotFromNos>();
+        serviceCollection.AddTransient<IFetchPageFromNos, FetchPageFromNos>();
         serviceCollection.AddTransient<HtmlDocument>();
         serviceCollection.AddTransient<ATProtocol>(_ => new ATProtocolBuilder().EnableAutoRenewSession(true).Build());
     }

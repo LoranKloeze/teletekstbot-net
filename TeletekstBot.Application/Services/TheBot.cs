@@ -10,7 +10,7 @@ public class TheBot : ITheBot
 {
     private readonly IPageStore _pageStore;
     private readonly ILogger<TheBot> _logger;
-    private readonly IFetchScreenshotFromNos _fetchScreenshotFromNos;
+    private readonly IFetchPageFromNos _fetchPageFromNos;
     private readonly IHostEnvironment _env;
 
     private readonly IMediator _mediator;
@@ -19,9 +19,9 @@ public class TheBot : ITheBot
     private const int PageNumberEnd = 150;
 
     public TheBot(IMediator mediator, IPageStore pageStore, ILogger<TheBot> logger,
-        IFetchScreenshotFromNos fetchScreenshotFromNos, IHostEnvironment env)
+        IFetchPageFromNos fetchPageFromNos, IHostEnvironment env)
     {
-        _fetchScreenshotFromNos = fetchScreenshotFromNos;
+        _fetchPageFromNos = fetchPageFromNos;
         _pageStore = pageStore;
         _logger = logger;
         _env = env;
@@ -37,7 +37,7 @@ public class TheBot : ITheBot
                 var checkIfPagesExistsInStore = _env.IsProduction();
 
                 // Retrieve screenshot and page from NOS
-                var (screenshotPath, page) = await _fetchScreenshotFromNos.GetPageAndScreenshot(pageNr);
+                var (screenshotPath, page) = await _fetchPageFromNos.GetPageAndScreenshot(pageNr);
                 
                 if (page == null || string.IsNullOrEmpty(page.Title))
                 {

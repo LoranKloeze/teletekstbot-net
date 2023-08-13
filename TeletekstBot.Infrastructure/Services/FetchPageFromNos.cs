@@ -10,10 +10,10 @@ using TeletekstBot.Infrastructure.Interfaces;
 
 namespace TeletekstBot.Infrastructure.Services;
 
-public partial class FetchScreenshotFromNos : IFetchScreenshotFromNos
+public partial class FetchPageFromNos : IFetchPageFromNos
 {
     private readonly IBrowserFactory _browserFactory;
-    private readonly ILogger<FetchScreenshotFromNos>  _logger;
+    private readonly ILogger<FetchPageFromNos>  _logger;
     
     private const string NosUrl = "https://nos.nl/teletekst";
 
@@ -29,7 +29,7 @@ public partial class FetchScreenshotFromNos : IFetchScreenshotFromNos
     
     
     
-    public FetchScreenshotFromNos(ILogger<FetchScreenshotFromNos> logger, IBrowserFactory browserFactory)
+    public FetchPageFromNos(ILogger<FetchPageFromNos> logger, IBrowserFactory browserFactory)
     {
         _logger = logger;
         _browserFactory = browserFactory;
