@@ -19,6 +19,9 @@ public class FetchScreenshotFromNosTests
         var browser = Substitute.For<IBrowser>();
         var page = Substitute.For<IPage>();
         
+        var html = MockFile.GetFileText("full_nos_page.html");
+        page.GetContentAsync().ReturnsForAnyArgs(html);
+        
         browserFactory.Create().ReturnsForAnyArgs(browser);
         browser.NewPageAsync().ReturnsForAnyArgs(page);
         
