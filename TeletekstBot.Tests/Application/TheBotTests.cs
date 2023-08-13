@@ -78,7 +78,7 @@ public class TheBotTests
         // Arrange
         _env.EnvironmentName.Returns("Production");
         const string screenshotPath = "@X:/fake_screenshot.jpg";
-        _fetchScreenshotFromNos.GetPageAndScreenshot(104).Returns((screenshotPath, (Page)null!));
+        _fetchScreenshotFromNos.GetPageAndScreenshot(104).Returns((screenshotPath, null!));
 
         const int delayBetweenPageFetching = 0;
 

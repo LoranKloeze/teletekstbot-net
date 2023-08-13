@@ -7,20 +7,16 @@ using PuppeteerSharp;
 using PuppeteerSharp.Media;
 using TeletekstBot.Application.Interfaces;
 using TeletekstBot.Infrastructure.Interfaces;
-using TeletekstBot.Domain.Entities;
 
 namespace TeletekstBot.Infrastructure.Services;
 
-public class FetchScreenshotFromNos : IFetchScreenshotFromNos
+public partial class FetchScreenshotFromNos : IFetchScreenshotFromNos
 {
     private readonly IBrowserFactory _browserFactory;
     private readonly ILogger<FetchScreenshotFromNos>  _logger;
     
     private const string NosUrl = "https://nos.nl/teletekst";
 
-    private const string WatchDogJavascript =
-        "() => document.getElementById('teletekst').innerText.indexOf(\"volgende  nieuws  weer&verkeer  sport\") > 0;";
-    
     // Dimensions of the complete browser window
     private const int ViewPortWidth = 460;
     private const int ViewPortHeight = 950;
@@ -57,7 +53,6 @@ public class FetchScreenshotFromNos : IFetchScreenshotFromNos
         await browserPage.GoToAsync($"{NosUrl}#{pageNr}");
         
         await browserPage.WaitForNetworkIdleAsync();
-        // await browserPage.WaitForFunctionAsync(WatchDogJavascript);
         
         _logger.LogInformation("Retrieving html for page {PageNr}", pageNr);
         var html = await browserPage.GetContentAsync();
@@ -136,7 +131,7 @@ public class FetchScreenshotFromNos : IFetchScreenshotFromNos
         return sanitized;
     }
     
-    private bool IsANewsPage(string html)
+    private static bool IsANewsPage(string html)
     {
         var htmlDoc = new HtmlDocument();
         htmlDoc.LoadHtml(html);
@@ -150,15 +145,10 @@ public class FetchScreenshotFromNos : IFetchScreenshotFromNos
         return HtmlTagsMyRegex().Replace(html, string.Empty);
     }
     
-    private static Regex HtmlTagsMyRegex()
-    {
-        return new Regex("<.*?>", RegexOptions.Compiled);
-    }
+
+    [GeneratedRegex("<.*?>", RegexOptions.Compiled)]
+    private static partial Regex HtmlTagsMyRegex();
     
-    private static Regex WhitespaceRegex()
-    {
-        return new Regex(@"\s+", RegexOptions.Compiled);
-    }
-    
-    
+    [GeneratedRegex("\\s+", RegexOptions.Compiled)]
+    private static partial Regex WhitespaceRegex();
 }

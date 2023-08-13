@@ -36,7 +36,8 @@ public class FetchScreenshotFromNosTests
         Assert.Multiple(() =>
         {
             Assert.That(filePath, Is.EqualTo(expectedFilePath));
-            Assert.That(fetchedPage.PageNumber, Is.EqualTo(pageNr));
+            Assert.That(fetchedPage, Is.Not.Null);
+            Assert.That(fetchedPage?.PageNumber, Is.EqualTo(pageNr));
         });
         await page.ReceivedWithAnyArgs().ScreenshotAsync(default, default);
     }
