@@ -32,7 +32,7 @@ public partial class ParseIncomingPage : IParseIncomingPage
     private string ExtractTitle()
     {
         var node = _htmlDocument.DocumentNode.SelectSingleNode(TitleXPath);
-        return node != null ? node.InnerHtml.Trim() : string.Empty;
+        return node != null ? WebUtility.HtmlDecode(node.InnerHtml.Trim()) : string.Empty;
     }
 
     private string ExtractBody()
