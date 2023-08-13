@@ -51,4 +51,23 @@ public class ParseIncomingPageTests
             Assert.That(result.Body, Does.EndWith(expectedBodyEnd));
         });
     }
+    
+    [Test]
+    public void ParseHtml_WithHtmlEntitiesInTitleReturnsCorrectPage()
+    {
+        // Arrange
+        var parseIncomingPage = new ParseIncomingPage(new HtmlDocument());
+        var html = MockFile.GetFileText("page110_with_html_entities_in_title.html");
+        const string expectedTitle = "Miss Universe breekt met Indonesië";
+        
+        // Act
+        var result = parseIncomingPage.ParseHtml(html);
+        
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.InstanceOf<Page>());
+            Assert.That(result.Title, Is.EqualTo(expectedTitle));
+        });
+    }
 }
