@@ -41,6 +41,7 @@ public class TheBot : ITheBot
                 
                 if (page == null || string.IsNullOrEmpty(page.Title))
                 {
+                    _logger.LogInformation("Page {PageNr} is not a valid news page at the moment, skipping...", pageNr);
                     // Wait a bit to prevent any rate limiting
                     await Task.Delay(delayBetweenPageFetching, stoppingToken);
                     continue;
