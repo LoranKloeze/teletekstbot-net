@@ -1,8 +1,4 @@
-﻿using System.Net;
-using System.Text;
-using System.Text.RegularExpressions;
-using HtmlAgilityPack;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using PuppeteerSharp;
 using PuppeteerSharp.Media;
 using TeletekstBot.Application.Interfaces;
@@ -10,7 +6,7 @@ using TeletekstBot.Infrastructure.Interfaces;
 
 namespace TeletekstBot.Infrastructure.Services;
 
-public partial class FetchPageFromNos : IFetchPageFromNos
+public class FetchPageFromNos : IFetchPageFromNos
 {
     private readonly IBrowserFactory _browserFactory;
     private readonly ILogger<FetchPageFromNos>  _logger;

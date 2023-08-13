@@ -31,7 +31,7 @@ public static class InfrastructureExtension
         });
         serviceCollection.AddTransient<IMastodonService, MastodonService>();
         serviceCollection.AddTransient<IBlueSkyService, BlueSkyService>();
-        serviceCollection.AddTransient<ITeletekstHtmlParser>(provider => new TeletekstHtmlParser(new HtmlDocument()));
+        serviceCollection.AddTransient<ITeletekstHtmlParser>(_ => new TeletekstHtmlParser(new HtmlDocument()));
         serviceCollection.AddTransient<IPageStore, PageStore>();
         serviceCollection.AddSingleton<IBrowserFactory, BrowserFactory>();
         serviceCollection.AddTransient<IFetchPageFromNos, FetchPageFromNos>();
