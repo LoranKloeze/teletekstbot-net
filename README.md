@@ -6,7 +6,7 @@ and posts them to Bluesky and Mastodon.
 
 ## How it works
 The bot loops over a range of Teletekst numbers and for each number it:
-1. Fetches the title and contents from the NOS using their unofficial API
+1. Fetches the title, contents and a screenshot from the NOS
 2. Checks if it has already posted the combination of page number and title (skips to 1 if it has)
 3. Creates a screenshot from the Teletekst webpage
 4. Posts the page to Bluesky and Mastodon
