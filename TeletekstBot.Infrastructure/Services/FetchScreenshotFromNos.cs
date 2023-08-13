@@ -61,7 +61,6 @@ public class FetchScreenshotFromNos : IFetchScreenshotFromNos
         
         _logger.LogInformation("Retrieving html for page {PageNr}", pageNr);
         var html = await browserPage.GetContentAsync();
-        var isanew = IsANewsPage(html);
         if (!IsANewsPage(html))
         {
             return (string.Empty, null);
