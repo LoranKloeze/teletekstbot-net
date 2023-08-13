@@ -9,7 +9,7 @@ namespace TeletekstBot.Tests.Infrastructure;
 public class FetchScreenshotFromNosTests
 {
     [Test]
-    public async Task Get_WithValidPageNumberReturnsScreenshotFilePath()
+    public async Task Get_WithValidPageNumberReturnsScreenshotFilePathAndPage()
     {
         // Arrange
         const int pageNr = 110;
@@ -27,11 +27,14 @@ public class FetchScreenshotFromNosTests
         var expectedFilePath = Path.Combine(Path.GetTempPath(), $"screenshot_{pageNr}.png");
         
         // Act
-        var result = await fetchScreenshotFromNos.Get(pageNr);
+        var (filePath, fetchedPage) = await fetchScreenshotFromNos.GetPageAndScreenshot(pageNr);
         
         // Assert
-        
-        Assert.That(result, Is.EqualTo(expectedFilePath));
+        Assert.Multiple(() =>
+        {
+            Assert.That(filePath, Is.EqualTo(expectedFilePath));
+            Assert.That(fetchedPage.PageNumber, Is.EqualTo(pageNr));
+        });
         await page.ReceivedWithAnyArgs().ScreenshotAsync(default, default);
     }
 }

@@ -1,8 +1,13 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Net;
+using System.Text;
+using System.Text.RegularExpressions;
+using HtmlAgilityPack;
+using Microsoft.Extensions.Logging;
 using PuppeteerSharp;
 using PuppeteerSharp.Media;
 using TeletekstBot.Application.Interfaces;
 using TeletekstBot.Infrastructure.Interfaces;
+using TeletekstBot.Domain.Entities;
 
 namespace TeletekstBot.Infrastructure.Services;
 
@@ -33,11 +38,12 @@ public class FetchScreenshotFromNos : IFetchScreenshotFromNos
         _logger = logger;
         _browserFactory = browserFactory;
     }
-    public async Task<string> Get(int pageNr)
+    
+    public async Task<(string, Domain.Entities.Page?)> GetPageAndScreenshot(int pageNr)
     {
         var browser = await _browserFactory.Create();
-        var page = await browser.NewPageAsync();
-        await page.SetViewportAsync(new ViewPortOptions
+        var browserPage = await browser.NewPageAsync();
+        await browserPage.SetViewportAsync(new ViewPortOptions
         {
             Width = ViewPortWidth,
             Height = ViewPortHeight
@@ -48,12 +54,13 @@ public class FetchScreenshotFromNos : IFetchScreenshotFromNos
 
         var filePath = Path.Combine(Path.GetTempPath(), $"screenshot_{pageNr}.png");
         
-        await page.GoToAsync($"{NosUrl}#{pageNr}");
+        await browserPage.GoToAsync($"{NosUrl}#{pageNr}");
         
-        await page.WaitForNetworkIdleAsync();
-        await page.WaitForFunctionAsync(WatchDogJavascript);
+        await browserPage.WaitForNetworkIdleAsync();
+        await browserPage.WaitForFunctionAsync(WatchDogJavascript);
+        
 
-        await page.ScreenshotAsync(filePath, new ScreenshotOptions
+        await browserPage.ScreenshotAsync(filePath, new ScreenshotOptions
         {
             Clip = new Clip
             {
@@ -63,9 +70,81 @@ public class FetchScreenshotFromNos : IFetchScreenshotFromNos
                 Y = ClipStartY
             }
         });
+
+        _logger.LogInformation("Retrieving html for page {PageNr}", pageNr);
+        var html = await browserPage.GetContentAsync();
+        var page = ExtractPageFromHtml(html);
+        page.PageNumber = pageNr;
         
         
-        _logger.LogInformation("Screenshot created at {FilePath} for page {PageNr}", filePath, pageNr);
-        return filePath;
+        _logger.LogInformation("Screenshot and page created at {FilePath} for page {PageNr}", filePath, pageNr);
+        return (filePath, page);
     }
+
+    private static Domain.Entities.Page ExtractPageFromHtml(string html)
+    {
+        var htmlDoc = new HtmlDocument();
+        htmlDoc.LoadHtml(html);
+        
+        return new Domain.Entities.Page
+        {
+            Title = ExtractTitle(htmlDoc),
+            Body = ExtractBody(htmlDoc)
+        };
+    }
+
+    private static string ExtractTitle(HtmlDocument htmlDoc)
+    {
+        var titleNode = htmlDoc.DocumentNode.SelectSingleNode("//*[@id=\"teletekst\"]/div[2]/pre/span[6]");
+        return titleNode == null ? string.Empty : titleNode.InnerText.Trim();
+    }
+    
+    private static string ExtractBody(HtmlDocument htmlDoc)
+    {
+        var sb = new StringBuilder();
+        const string specialEofBodyChar = "&#xF020;";
+        const int firstBodyNodeIndex = 13;
+
+        var parentNode = htmlDoc.DocumentNode.SelectSingleNode("//*[@id=\"teletekst\"]/div[2]/pre");
+        if (parentNode == null)
+        {
+            return string.Empty;
+        }
+        
+        var childNodes = parentNode.ChildNodes.Skip(firstBodyNodeIndex);
+        foreach (var node in childNodes)
+        {
+            if (node.InnerHtml.StartsWith(specialEofBodyChar))
+            {
+                break;
+            }
+                
+            sb.Append(node.InnerHtml);
+        }
+
+        var sanitized = WebUtility.HtmlDecode(sb.ToString().Trim());
+        sanitized = sanitized.Replace("\r", "").Replace("\n", "");
+        sanitized = RemoveHtmlEntities(sanitized);
+        
+        sanitized = WhitespaceRegex().Replace(sanitized, " ");
+        
+        return sanitized;
+    }
+    
+    private static string RemoveHtmlEntities(string html)
+    {
+        return HtmlTagsMyRegex().Replace(html, string.Empty);
+    }
+    
+    private static Regex HtmlTagsMyRegex()
+    {
+        return new Regex("<.*?>", RegexOptions.Compiled);
+    }
+    
+    private static Regex WhitespaceRegex()
+    {
+        return new Regex(@"\s+", RegexOptions.Compiled);
+    }
+    
+    
 }

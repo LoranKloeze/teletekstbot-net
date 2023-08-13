@@ -12,7 +12,6 @@ namespace TeletekstBot.Tests.Application;
 public class TheBotTests
 {
     private ITheBot _theBot = null!;
-    private IFetchPageFromNos _fetchPageFromNos = null!;
     private IPageStore _pageStore = null!;
     private ILogger<TheBot> _logger = null!;
     private IFetchScreenshotFromNos _fetchScreenshotFromNos = null!;
@@ -23,14 +22,13 @@ public class TheBotTests
     [SetUp]
     public void SetUp()
     {
-        _fetchPageFromNos = Substitute.For<IFetchPageFromNos>();
         _pageStore = Substitute.For<IPageStore>();
         _logger = Substitute.For<ILogger<TheBot>>();
         _fetchScreenshotFromNos = Substitute.For<IFetchScreenshotFromNos>();
         _env = Substitute.For<IHostEnvironment>();
         _mediator = Substitute.For<IMediator>();
 
-        _theBot = new TheBot(_mediator, _fetchPageFromNos, _pageStore, _logger, _fetchScreenshotFromNos, _env);
+        _theBot = new TheBot(_mediator, _pageStore, _logger, _fetchScreenshotFromNos, _env);
     }
 
     [Test]
@@ -39,11 +37,10 @@ public class TheBotTests
         // Arrange
         _env.EnvironmentName.Returns("Production");
         var page = new Page { Title = "SampleTitle" };
-        _fetchPageFromNos.Get(104, Arg.Any<CancellationToken>()).Returns(page);
-        _fetchPageFromNos.Get(105, Arg.Any<CancellationToken>()).Returns(page);
+        const string screenshotPath = "@X:/fake_screenshot.jpg";
+        _fetchScreenshotFromNos.GetPageAndScreenshot(104).Returns((screenshotPath, page));
+        _fetchScreenshotFromNos.GetPageAndScreenshot(105).Returns((screenshotPath, page));
         _pageStore.TitlePageNrExist("SampleTitle", 104).Returns(false);
-        _fetchScreenshotFromNos.Get(104).Returns("samplePath");
-        _fetchScreenshotFromNos.Get(105).Returns("samplePath");
 
         const int delayBetweenPageFetching = 0;
 
@@ -52,7 +49,7 @@ public class TheBotTests
 
         // Assert
         await _mediator.Received(2)
-            .Publish(Arg.Is<NewPageEvent>(e => e.Page == page && e.ScreenshotPath == "samplePath"),
+            .Publish(Arg.Is<NewPageEvent>(e => e.Page == page && e.ScreenshotPath == screenshotPath),
                 CancellationToken.None);
     }
 
@@ -62,7 +59,8 @@ public class TheBotTests
         // Arrange
         _env.EnvironmentName.Returns("Production");
         var page = new Page { Title = "SampleTitle" };
-        _fetchPageFromNos.Get(104, Arg.Any<CancellationToken>()).Returns(page);
+        const string screenshotPath = "@X:/fake_screenshot.jpg";
+        _fetchScreenshotFromNos.GetPageAndScreenshot(104).Returns((screenshotPath, page));
         _pageStore.TitlePageNrExist("SampleTitle", 104).Returns(true);
 
         const int delayBetweenPageFetching = 0;
@@ -79,7 +77,8 @@ public class TheBotTests
     {
         // Arrange
         _env.EnvironmentName.Returns("Production");
-        _fetchPageFromNos.Get(104, Arg.Any<CancellationToken>()).Returns((Page)null!);
+        const string screenshotPath = "@X:/fake_screenshot.jpg";
+        _fetchScreenshotFromNos.GetPageAndScreenshot(104).Returns((screenshotPath, (Page)null!));
 
         const int delayBetweenPageFetching = 0;
 

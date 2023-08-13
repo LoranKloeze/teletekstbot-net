@@ -8,7 +8,6 @@ namespace TeletekstBot.Application.Services;
 
 public class TheBot : ITheBot
 {
-    private readonly IFetchPageFromNos _fetchPageFromNos;
     private readonly IPageStore _pageStore;
     private readonly ILogger<TheBot> _logger;
     private readonly IFetchScreenshotFromNos _fetchScreenshotFromNos;
@@ -19,10 +18,9 @@ public class TheBot : ITheBot
     private const int PageNumberStart = 104;
     private const int PageNumberEnd = 150;
 
-    public TheBot(IMediator mediator, IFetchPageFromNos fetchPageFromNos, IPageStore pageStore, ILogger<TheBot> logger,
+    public TheBot(IMediator mediator, IPageStore pageStore, ILogger<TheBot> logger,
         IFetchScreenshotFromNos fetchScreenshotFromNos, IHostEnvironment env)
     {
-        _fetchPageFromNos = fetchPageFromNos;
         _fetchScreenshotFromNos = fetchScreenshotFromNos;
         _pageStore = pageStore;
         _logger = logger;
@@ -38,8 +36,9 @@ public class TheBot : ITheBot
             {
                 var checkIfPagesExistsInStore = _env.IsProduction();
 
-                // Retrieve page from NOS
-                var page = await _fetchPageFromNos.Get(pageNr, stoppingToken);
+                // Retrieve screenshot and page from NOS
+                var (screenshotPath, page) = await _fetchScreenshotFromNos.GetPageAndScreenshot(pageNr);
+                
                 if (page == null || string.IsNullOrEmpty(page.Title))
                 {
                     // Wait a bit to prevent any rate limiting
@@ -61,9 +60,6 @@ public class TheBot : ITheBot
 
                 // Page is new, let's save it in the store
                 _pageStore.SaveTitlePageNr(page.Title, pageNr);
-
-                // Retrieve a screenshot
-                var screenshotPath = await _fetchScreenshotFromNos.Get(pageNr);
 
                 // Publish the page
                 await _mediator.Publish(new NewPageEvent(page, screenshotPath), stoppingToken);

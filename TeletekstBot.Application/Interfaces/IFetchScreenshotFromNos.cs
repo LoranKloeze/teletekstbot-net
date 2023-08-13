@@ -2,5 +2,5 @@
 
 public interface IFetchScreenshotFromNos
 {
-    public Task<string> Get(int pageNr);
+    public Task<(string, Domain.Entities.Page?)> GetPageAndScreenshot(int pageNr);
 }
