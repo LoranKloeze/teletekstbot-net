@@ -23,7 +23,6 @@ public static class InfrastructureExtension
             Debug.Assert(redisConnection != null, nameof(redisConnection) + " != null");
             return ConnectionMultiplexer.Connect(redisConnection);
         });
-        serviceCollection.AddTransient<IParseIncomingPage, ParseIncomingPage>();
         serviceCollection.AddTransient<IMastodonClient, MastodonClient>(_ =>
         {
             var accessToken = hostContext.Configuration["Mastodon:AccessToken"];
@@ -32,6 +31,7 @@ public static class InfrastructureExtension
         });
         serviceCollection.AddTransient<IMastodonService, MastodonService>();
         serviceCollection.AddTransient<IBlueSkyService, BlueSkyService>();
+        serviceCollection.AddTransient<ITeletekstHtmlParser>(provider => new TeletekstHtmlParser(new HtmlDocument()));
         serviceCollection.AddTransient<IPageStore, PageStore>();
         serviceCollection.AddSingleton<IBrowserFactory, BrowserFactory>();
         serviceCollection.AddTransient<IFetchPageFromNos, FetchPageFromNos>();

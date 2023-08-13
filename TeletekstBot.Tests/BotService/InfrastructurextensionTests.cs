@@ -41,7 +41,7 @@ public class InfrastructureExtensionTests
             typeof(IHttpClientFactory),
             typeof(IBlueskyApi),
             typeof(IConnectionMultiplexer),
-            typeof(IParseIncomingPage),
+            typeof(ITeletekstHtmlParser),
             typeof(IMastodonClient),
             typeof(IMastodonService),
             typeof(IBlueSkyService),

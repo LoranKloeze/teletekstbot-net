@@ -16,16 +16,21 @@ public class FetchPageFromNosTests
         
         var logger = Substitute.For<ILogger<FetchPageFromNos>>();
         var browserFactory = Substitute.For<IBrowserFactory>();
+        var teletekstHtmlParser = Substitute.For<ITeletekstHtmlParser>();
         var browser = Substitute.For<IBrowser>();
         var page = Substitute.For<IPage>();
         
-        var html = MockFile.GetFileText("full_nos_page.html");
+        var html = MockFile.GetFileText("full_nos_page_110.html");
         page.GetContentAsync().ReturnsForAnyArgs(html);
         
         browserFactory.Create().ReturnsForAnyArgs(browser);
         browser.NewPageAsync().ReturnsForAnyArgs(page);
+
+        teletekstHtmlParser.IsANewsPage().ReturnsForAnyArgs(true);
+        var returnedPage = new TeletekstBot.Domain.Entities.Page { PageNumber = pageNr };
+        teletekstHtmlParser.ToPage().ReturnsForAnyArgs(returnedPage);
         
-        var fetchPageFromNos = new FetchPageFromNos(logger, browserFactory);
+        var fetchPageFromNos = new FetchPageFromNos(logger, browserFactory, teletekstHtmlParser);
 
         var expectedFilePath = Path.Combine(Path.GetTempPath(), $"screenshot_{pageNr}.png");
         

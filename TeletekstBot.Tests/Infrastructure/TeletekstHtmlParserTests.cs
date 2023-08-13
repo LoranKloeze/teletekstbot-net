@@ -5,20 +5,21 @@ using TeletekstBot.Infrastructure.Services;
 
 namespace TeletekstBot.Tests.Infrastructure;
 
-public class ParseIncomingPageTests
+public class TeletekstHtmlParserTests
 {
     [Test]
-    public void ParseHtml_WithCorrectHtmlReturnsCorrectPage()
+    public void ToPage_WithCorrectHtmlReturnsCorrectPage()
     {
         // Arrange
-        var parseIncomingPage = new ParseIncomingPage(new HtmlDocument());
-        var html = MockFile.GetFileText("page110.html");
+        var teletekstHtmlParser = new TeletekstHtmlParser(new HtmlDocument());
+        var html = MockFile.GetFileText("full_nos_page_110.html");
         const string expectedTitle = "NS verliest alleenrecht buitenland";
         const string expectedBodyStart = "Het demissionaire kabinet wil naast NS ook andere";
         const string expectedBodyEnd = "twee stappen met nog 7 procent kan verhogen.";
+        teletekstHtmlParser.LoadHtml(html);
         
         // Act
-        var result = parseIncomingPage.ParseHtml(html);
+        var result = teletekstHtmlParser.ToPage();
         
         // Assert
         Assert.Multiple(() =>
@@ -30,17 +31,18 @@ public class ParseIncomingPageTests
         });
     }
     [Test]
-    public void ParseHtml_WithWrongHtmlReturnsCorrectPage()
+    public void ToPage_WithWrongHtmlReturnsCorrectPage()
     {
         // Arrange
-        var parseIncomingPage = new ParseIncomingPage(new HtmlDocument());
+        var teletekstHtmlParser = new TeletekstHtmlParser(new HtmlDocument());
         const string html = "<span>Wrong html</span>";
         const string expectedTitle = "";
         const string expectedBodyStart = "";
         const string expectedBodyEnd = "";
+        teletekstHtmlParser.LoadHtml(html);
         
         // Act
-        var result = parseIncomingPage.ParseHtml(html);
+        var result = teletekstHtmlParser.ToPage();
         
         // Assert
         Assert.Multiple(() =>
@@ -53,15 +55,16 @@ public class ParseIncomingPageTests
     }
     
     [Test]
-    public void ParseHtml_WithHtmlEntitiesInTitleReturnsCorrectPage()
+    public void ToPage_WithHtmlEntitiesInTitleReturnsCorrectPage()
     {
         // Arrange
-        var parseIncomingPage = new ParseIncomingPage(new HtmlDocument());
-        var html = MockFile.GetFileText("page110_with_html_entities_in_title.html");
+        var teletekstHtmlParser = new TeletekstHtmlParser(new HtmlDocument());
+        var html = MockFile.GetFileText("full_nos_page_110_with_html_entities_in_title.html");
         const string expectedTitle = "Miss Universe breekt met Indonesië";
-        
+        teletekstHtmlParser.LoadHtml(html);
+
         // Act
-        var result = parseIncomingPage.ParseHtml(html);
+        var result = teletekstHtmlParser.ToPage();
         
         // Assert
         Assert.Multiple(() =>
@@ -69,5 +72,35 @@ public class ParseIncomingPageTests
             Assert.That(result, Is.InstanceOf<Page>());
             Assert.That(result.Title, Is.EqualTo(expectedTitle));
         });
+    }
+
+    [Test]
+    public void IsANewsPage_WithNewsHtmlReturnsTrue()
+    {
+        // Arrange
+        var teletekstHtmlParser = new TeletekstHtmlParser(new HtmlDocument());
+        var html = MockFile.GetFileText("full_nos_page_110.html");
+        teletekstHtmlParser.LoadHtml(html);
+        
+        // Act
+        var result = teletekstHtmlParser.IsANewsPage();
+        
+        // Assert
+        Assert.That(result, Is.True);
+    }
+    
+    [Test]
+    public void IsANewsPage_WithNonNewsHtmlReturnsFalse()
+    {
+        // Arrange
+        var teletekstHtmlParser = new TeletekstHtmlParser(new HtmlDocument());
+        var html = MockFile.GetFileText("full_nos_page_100.html");
+        teletekstHtmlParser.LoadHtml(html);
+        
+        // Act
+        var result = teletekstHtmlParser.IsANewsPage();
+        
+        // Assert
+        Assert.That(result, Is.False);
     }
 }
