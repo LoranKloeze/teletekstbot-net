@@ -8,5 +8,5 @@ public interface ITeletekstHtmlParser
     Page ToPage();
     bool IsANewsPage();
 
-    public List<int> RelevantPageNumbers();
+    public List<Page> RelevantPages();
 }

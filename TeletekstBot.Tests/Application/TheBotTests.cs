@@ -14,10 +14,10 @@ public class TheBotTests
     private ITheBot _theBot = null!;
     private IPageStore _pageStore = null!;
     private ILogger<TheBot> _logger = null!;
-    private IFetchPageFromNos _fetchPageFromNos = null!;
+    private IFetchPageDetailsFromNos _fetchPageDetailsFromNos = null!;
     private IHostEnvironment _env = null!;
     private IMediator _mediator = null!;
-    private IFetchPageNumbersFromNos _fetchPageNumbersFromNos = null!;
+    private IFetchPagesFromNos _fetchPagesFromNos = null!;
 
 
     [SetUp]
@@ -25,12 +25,12 @@ public class TheBotTests
     {
         _pageStore = Substitute.For<IPageStore>();
         _logger = Substitute.For<ILogger<TheBot>>();
-        _fetchPageFromNos = Substitute.For<IFetchPageFromNos>();
-        _fetchPageNumbersFromNos = Substitute.For<IFetchPageNumbersFromNos>();
+        _fetchPageDetailsFromNos = Substitute.For<IFetchPageDetailsFromNos>();
+        _fetchPagesFromNos = Substitute.For<IFetchPagesFromNos>();
         _env = Substitute.For<IHostEnvironment>();
         _mediator = Substitute.For<IMediator>();
         
-        _theBot = new TheBot(_mediator, _pageStore, _logger, _fetchPageFromNos, _fetchPageNumbersFromNos, _env);
+        _theBot = new TheBot(_mediator, _pageStore, _logger, _fetchPageDetailsFromNos, _fetchPagesFromNos, _env);
     }
 
     [Test]
@@ -38,13 +38,16 @@ public class TheBotTests
     {
         // Arrange
         _env.EnvironmentName.Returns("Production");
-        var page = new Page { Title = "SampleTitle" };
+        var page = new Page { Title = "SampleTitle", Body = "Body of page"};
         const string screenshotPath = "@X:/fake_screenshot.jpg";
-        _fetchPageFromNos.GetPageAndScreenshot(104).Returns((screenshotPath, page));
-        _fetchPageFromNos.GetPageAndScreenshot(105).Returns((screenshotPath, page));
+        _fetchPageDetailsFromNos.GetPageAndScreenshot(104).Returns((screenshotPath, page));
+        _fetchPageDetailsFromNos.GetPageAndScreenshot(105).Returns((screenshotPath, page));
+        _fetchPageDetailsFromNos.GetPageAndScreenshot(106).Returns((screenshotPath, page));
         _pageStore.TitlePageNrExist("SampleTitle", 104).Returns(false);
-        _fetchPageNumbersFromNos.GetNumbers()
-            .Returns(new List<int> { 104, 105, 106 });
+        var page104 = new Page { PageNumber = 104, Title = "SampleTitle" };
+        var page105 = new Page { PageNumber = 105, Title = "SampleTitle" };
+        var page106 = new Page { PageNumber = 106, Title = "SampleTitle" };
+        _fetchPagesFromNos.GetPages().Returns(new List<Page> { page104, page105, page106 });
 
         const int delayBetweenPageFetching = 0;
 
@@ -53,7 +56,7 @@ public class TheBotTests
 
         // Assert
         await _mediator.Received(2)
-            .Publish(Arg.Is<NewPageEvent>(e => e.Page == page && e.ScreenshotPath == screenshotPath),
+            .Publish(Arg.Is<NewPageEvent>(e => e.Page == page105 || e.Page == page106 && e.ScreenshotPath == screenshotPath),
                 CancellationToken.None);
     }
 
@@ -64,10 +67,9 @@ public class TheBotTests
         _env.EnvironmentName.Returns("Production");
         var page = new Page { Title = "SampleTitle" };
         const string screenshotPath = "@X:/fake_screenshot.jpg";
-        _fetchPageFromNos.GetPageAndScreenshot(104).Returns((screenshotPath, page));
+        _fetchPageDetailsFromNos.GetPageAndScreenshot(104).Returns((screenshotPath, page));
         _pageStore.TitlePageNrExist("SampleTitle", 104).Returns(true);
-        _fetchPageNumbersFromNos.GetNumbers()
-            .Returns(new List<int> { 104, 105, 106 });
+        _fetchPagesFromNos.GetPages().Returns(new List<Page>());
 
         const int delayBetweenPageFetching = 0;
 
@@ -84,9 +86,8 @@ public class TheBotTests
         // Arrange
         _env.EnvironmentName.Returns("Production");
         const string screenshotPath = "@X:/fake_screenshot.jpg";
-        _fetchPageFromNos.GetPageAndScreenshot(104).Returns((screenshotPath, null!));
-        _fetchPageNumbersFromNos.GetNumbers()
-            .Returns(new List<int> { 104, 105, 106 });
+        _fetchPageDetailsFromNos.GetPageAndScreenshot(104).Returns((screenshotPath, null!));
+        _fetchPagesFromNos.GetPages().Returns(new List<Page>());
 
         const int delayBetweenPageFetching = 0;
 

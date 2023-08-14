@@ -105,18 +105,29 @@ public class TeletekstHtmlParserTests
     }
 
     [Test]
-    public void RelevantPageNumbers_ReturnsListOfNumbers()
+    public void RelevantPages_ReturnsListOfPages()
     {
         var teletekstHtmlParser = new TeletekstHtmlParser(new HtmlDocument());
         var html = MockFile.GetFileText("full_nos_page_101.html");
         teletekstHtmlParser.LoadHtml(html);
         
-        var expectedNumbers = new List<int> {108,104,126,107,106,105, 136, 121, 125};
+        var expectedPages = new List<Page>
+        {
+            new () { PageNumber = 108, Title = "Yesilgöz officieel VVD-lijsttrekker" },
+            new () { PageNumber = 104, Title = "Honderden cryptotelefoons gekraakt." },
+            new () { PageNumber = 126, Title = "Junta Niger wil president vervolgen" },
+            new () { PageNumber = 107, Title = "Minister Schreinemacher is zwanger." },
+            new () { PageNumber = 106, Title = "Man verongelukt op N2 bij Eindhoven" },
+            new () { PageNumber = 105, Title = "Kinderprogramma met Römer offline.." },
+            new () { PageNumber = 136, Title = "Defecte attractie België:7 gewonden" },
+            new () { PageNumber = 121, Title = "Tweede dode door ongeluk in Twente." },
+            new () { PageNumber = 125, Title = "Minister:7 doden bij aanval Cherson" },
+        };
         
         // Act
-        var result = teletekstHtmlParser.RelevantPageNumbers();
+        var result = teletekstHtmlParser.RelevantPages();
         
         //Assert
-        CollectionAssert.AreEqual(expectedNumbers, result);
+        CollectionAssert.AreEqual(expectedPages, result);
     }
 }

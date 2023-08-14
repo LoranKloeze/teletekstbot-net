@@ -1,6 +1,6 @@
 ﻿namespace TeletekstBot.Application.Interfaces;
 
-public interface IFetchPageFromNos
+public interface IFetchPageDetailsFromNos
 {
     public Task<(string, Domain.Entities.Page?)> GetPageAndScreenshot(int pageNr);
 }

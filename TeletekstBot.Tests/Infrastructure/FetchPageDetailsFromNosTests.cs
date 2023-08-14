@@ -6,15 +6,15 @@ using TeletekstBot.Infrastructure.Services;
 
 namespace TeletekstBot.Tests.Infrastructure;
 
-public class FetchPageFromNosTests
+public class FetchPageDetailsFromNosTests
 {
     [Test]
-    public async Task Get_WithValidPageNumberReturnsScreenshotFilePathAndPage()
+    public async Task GetPageAndScreenshot_WithValidPageNumberReturnsScreenshotFilePathAndPage()
     {
         // Arrange
         const int pageNr = 110;
         
-        var logger = Substitute.For<ILogger<FetchPageFromNos>>();
+        var logger = Substitute.For<ILogger<FetchPageDetailsFromNos>>();
         var browserFactory = Substitute.For<IBrowserFactory>();
         var teletekstHtmlParser = Substitute.For<ITeletekstHtmlParser>();
         var browser = Substitute.For<IBrowser>();
@@ -30,7 +30,7 @@ public class FetchPageFromNosTests
         var returnedPage = new TeletekstBot.Domain.Entities.Page { PageNumber = pageNr };
         teletekstHtmlParser.ToPage().ReturnsForAnyArgs(returnedPage);
         
-        var fetchPageFromNos = new FetchPageFromNos(logger, browserFactory, teletekstHtmlParser);
+        var fetchPageFromNos = new FetchPageDetailsFromNos(logger, browserFactory, teletekstHtmlParser);
 
         var expectedFilePath = Path.Combine(Path.GetTempPath(), $"screenshot_{pageNr}.png");
         

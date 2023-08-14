@@ -5,10 +5,10 @@ using TeletekstBot.Infrastructure.Services;
 
 namespace TeletekstBot.Tests.Infrastructure;
 
-public class FetchPageNumbersFromNosTests
+public class FetchPagesFromNosTests
 {
     [Test]
-    public async Task GetNumbers_FetchesPageNumbersFromNos()
+    public async Task GetPages_FetchesPagesFromNos()
     {
         // Arrange
         var browserFactory = Substitute.For<IBrowserFactory>();
@@ -19,13 +19,13 @@ public class FetchPageNumbersFromNosTests
         browserFactory.Create().Returns(browser);
         browser.NewPageAsync().Returns(page);
         
-        var fetchPageFromNos = new FetchPageNumbersFromNos(browserFactory, teletekstHtmlParser);
+        var fetchPageFromNos = new FetchPagesFromNos(browserFactory, teletekstHtmlParser);
 
         // Act
-        await fetchPageFromNos.GetNumbers();
+        await fetchPageFromNos.GetPages();
         
         // Assert
         await page.Received().GoToAsync("https://nos.nl/teletekst#101");
-        teletekstHtmlParser.Received().RelevantPageNumbers();
+        teletekstHtmlParser.Received().RelevantPages();
     }
 }

@@ -30,15 +30,31 @@ public partial class TeletekstHtmlParser : ITeletekstHtmlParser
         };
     }
 
-    public List<int> RelevantPageNumbers()
+    public List<Page> RelevantPages()
     {
         var containerNode = _htmlDocument.DocumentNode.SelectSingleNode("//*[@id=\"teletekst\"]");
-        var elements = containerNode.SelectNodes("//a[@class='yellow' and not(@id)]");
+        
+        var pageLinkElements = containerNode.SelectNodes("//a[@class='yellow' and not(@id)]");
+        
+        var pages = new List<Page>();
 
-        var result = elements.Where(e => e.InnerHtml != "101")
-            .Select(e => e.InnerHtml).Select(int.Parse).ToList();
+        foreach (var pageLinkElement in pageLinkElements)
+        {
+            if (!int.TryParse(pageLinkElement.InnerHtml, out var pageNumber)) continue;
+            if (pageNumber is < 104 or > 199) continue;
 
-        return result;
+            var titleSpan = pageLinkElement.ParentNode?.PreviousSibling;
+            if (titleSpan == null || string.IsNullOrEmpty(titleSpan.InnerHtml)) continue;
+            
+            var title = WebUtility.HtmlDecode(titleSpan.InnerHtml.Trim());
+            pages.Add(new Page
+            {
+                PageNumber = pageNumber,
+                Title = title
+            });
+        }
+
+        return pages;
     }
 
     public bool IsANewsPage()

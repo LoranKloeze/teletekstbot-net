@@ -47,7 +47,7 @@ public class InfrastructureExtensionTests
             typeof(IBlueSkyService),
             typeof(IPageStore),
             typeof(IBrowserFactory),
-            typeof(IFetchPageFromNos),
+            typeof(IFetchPageDetailsFromNos),
             typeof(HtmlDocument),
             typeof(ATProtocol)
             

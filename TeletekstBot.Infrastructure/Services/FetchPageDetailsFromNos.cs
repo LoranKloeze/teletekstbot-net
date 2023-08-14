@@ -6,10 +6,10 @@ using TeletekstBot.Infrastructure.Interfaces;
 
 namespace TeletekstBot.Infrastructure.Services;
 
-public class FetchPageFromNos : IFetchPageFromNos
+public class FetchPageDetailsFromNos : IFetchPageDetailsFromNos
 {
     private readonly IBrowserFactory _browserFactory;
-    private readonly ILogger<FetchPageFromNos>  _logger;
+    private readonly ILogger<FetchPageDetailsFromNos>  _logger;
     private readonly ITeletekstHtmlParser  _teletekstHtmlParserParser;
     
     private const string NosUrl = "https://nos.nl/teletekst";
@@ -24,7 +24,7 @@ public class FetchPageFromNos : IFetchPageFromNos
     private const int ClipStartX = 40;
     private const int ClipStartY = 330;
     
-    public FetchPageFromNos(ILogger<FetchPageFromNos> logger, IBrowserFactory browserFactory, 
+    public FetchPageDetailsFromNos(ILogger<FetchPageDetailsFromNos> logger, IBrowserFactory browserFactory, 
         ITeletekstHtmlParser teletekstHtmlParserParser)
     {
         _logger = logger;
