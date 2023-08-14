@@ -41,15 +41,15 @@ public class PageTests
         var page = new Page
         {
             PageNumber = pageNumber,
-            Title = null,
-            Body = null
+            Title = "",
+            Body = ""
         };
         Assert.Multiple(() =>
         {
             // Assert
             Assert.That(page.PageNumber, Is.EqualTo(pageNumber));
-            Assert.That(page.Title, Is.Null);
-            Assert.That(page.Body, Is.Null);
+            Assert.That(page.Title, Is.Empty);
+            Assert.That(page.Body, Is.Empty);
         });
     }
 }

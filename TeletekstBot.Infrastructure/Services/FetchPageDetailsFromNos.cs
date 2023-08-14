@@ -46,8 +46,7 @@ public class FetchPageDetailsFromNos : IFetchPageDetailsFromNos
             return (string.Empty, null);
         }
 
-        var nosPage = _teletekstHtmlParserParser.ToPage();
-        nosPage.PageNumber = pageNr;
+        var nosPage = _teletekstHtmlParserParser.ToPage(pageNr);
         
         var screenshotPath = Path.Combine(Path.GetTempPath(), $"screenshot_{pageNr}.png");
         await CreateScreenshot(browserPage, screenshotPath);

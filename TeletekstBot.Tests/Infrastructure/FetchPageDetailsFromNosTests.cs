@@ -28,7 +28,7 @@ public class FetchPageDetailsFromNosTests
 
         teletekstHtmlParser.IsANewsPage().ReturnsForAnyArgs(true);
         var returnedPage = new TeletekstBot.Domain.Entities.Page { PageNumber = pageNr };
-        teletekstHtmlParser.ToPage().ReturnsForAnyArgs(returnedPage);
+        teletekstHtmlParser.ToPage(pageNr).ReturnsForAnyArgs(returnedPage);
         
         var fetchPageFromNos = new FetchPageDetailsFromNos(logger, browserFactory, teletekstHtmlParser);
 

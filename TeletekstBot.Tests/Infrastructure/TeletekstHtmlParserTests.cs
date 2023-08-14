@@ -16,10 +16,11 @@ public class TeletekstHtmlParserTests
         const string expectedTitle = "NS verliest alleenrecht buitenland";
         const string expectedBodyStart = "Het demissionaire kabinet wil naast NS ook andere";
         const string expectedBodyEnd = "twee stappen met nog 7 procent kan verhogen.";
+        const int expectedPageNumber = 110;
         teletekstHtmlParser.LoadHtml(html);
         
         // Act
-        var result = teletekstHtmlParser.ToPage();
+        var result = teletekstHtmlParser.ToPage(expectedPageNumber);
         
         // Assert
         Assert.Multiple(() =>
@@ -28,6 +29,7 @@ public class TeletekstHtmlParserTests
             Assert.That(result.Title, Is.EqualTo(expectedTitle));
             Assert.That(result.Body, Does.StartWith(expectedBodyStart));
             Assert.That(result.Body, Does.EndWith(expectedBodyEnd));
+            Assert.That(result.PageNumber, Is.EqualTo(expectedPageNumber));
         });
     }
     [Test]
@@ -39,10 +41,12 @@ public class TeletekstHtmlParserTests
         const string expectedTitle = "";
         const string expectedBodyStart = "";
         const string expectedBodyEnd = "";
+        const int expectedPageNumber = 110;
+
         teletekstHtmlParser.LoadHtml(html);
         
         // Act
-        var result = teletekstHtmlParser.ToPage();
+        var result = teletekstHtmlParser.ToPage(expectedPageNumber);
         
         // Assert
         Assert.Multiple(() =>
@@ -51,6 +55,7 @@ public class TeletekstHtmlParserTests
             Assert.That(result.Title, Is.EqualTo(expectedTitle));
             Assert.That(result.Body, Does.StartWith(expectedBodyStart));
             Assert.That(result.Body, Does.EndWith(expectedBodyEnd));
+            Assert.That(result.PageNumber, Is.EqualTo(expectedPageNumber));
         });
     }
     
@@ -61,16 +66,19 @@ public class TeletekstHtmlParserTests
         var teletekstHtmlParser = new TeletekstHtmlParser(new HtmlDocument());
         var html = MockFile.GetFileText("full_nos_page_110_with_html_entities_in_title.html");
         const string expectedTitle = "Miss Universe breekt met Indonesië";
+        const int expectedPageNumber = 110;
+
         teletekstHtmlParser.LoadHtml(html);
 
         // Act
-        var result = teletekstHtmlParser.ToPage();
+        var result = teletekstHtmlParser.ToPage(expectedPageNumber);
         
         // Assert
         Assert.Multiple(() =>
         {
             Assert.That(result, Is.InstanceOf<Page>());
             Assert.That(result.Title, Is.EqualTo(expectedTitle));
+            Assert.That(result.PageNumber, Is.EqualTo(expectedPageNumber));
         });
     }
 
@@ -121,7 +129,7 @@ public class TeletekstHtmlParserTests
             new () { PageNumber = 105, Title = "Kinderprogramma met Römer offline.." },
             new () { PageNumber = 136, Title = "Defecte attractie België:7 gewonden" },
             new () { PageNumber = 121, Title = "Tweede dode door ongeluk in Twente." },
-            new () { PageNumber = 125, Title = "Minister:7 doden bij aanval Cherson" },
+            new () { PageNumber = 125, Title = "Minister:7 doden bij aanval Cherson" }
         };
         
         // Act

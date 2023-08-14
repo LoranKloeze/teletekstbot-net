@@ -2,9 +2,9 @@
 
 public class Page
 {
-    public int PageNumber { get; set; }
-    public string? Title { get; set; }
-    public string? Body { get; set; }
+    public int PageNumber { get; init; }
+    public string Title { get; init; } = "";
+    public string Body { get; set; } = "";
 
     private bool Equals(Page other)
     {
@@ -20,6 +20,6 @@ public class Page
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(PageNumber, Title, Body);
+        return HashCode.Combine(PageNumber, Title);
     }
 }

@@ -21,10 +21,11 @@ public partial class TeletekstHtmlParser : ITeletekstHtmlParser
         _htmlDocument.LoadHtml(html);
     }
 
-    public Page ToPage()
+    public Page ToPage(int pageNr)
     {
         return new Page
         {
+            PageNumber = pageNr,
             Title = ExtractTitle(),
             Body = ExtractBody()
         };
