@@ -30,6 +30,7 @@ public class TheBot : ITheBot
 
     public async Task Run(int delayBetweenPageFetching, bool runForever, CancellationToken stoppingToken)
     {
+        var delayBetweenPageFetchingRounds = delayBetweenPageFetching * 10;
         while (!stoppingToken.IsCancellationRequested)
         {
             var relevantPages = await _fetchPagesFromNos.GetPages();
@@ -37,7 +38,7 @@ public class TheBot : ITheBot
             
             foreach (var page in relevantPages)
             {
-                
+
                 var checkIfPagesExistsInStore = _env.IsProduction();
 
                 // Retrieve screenshot and page from NOS
@@ -81,6 +82,9 @@ public class TheBot : ITheBot
             {
                 break;
             }
+            _logger.LogInformation("Done fetching pages, waiting {DelayBetweenPageFetchingRounds} seconds to check again...",
+                delayBetweenPageFetchingRounds / 1000);
+            await Task.Delay(delayBetweenPageFetchingRounds, stoppingToken);
         }
     }
 
