@@ -17,6 +17,8 @@ public class TheBot : ITheBot
 
     private readonly IMediator _mediator;
 
+    private const int DelayBetweenPageFetchingRounds = 5 * 60 * 1000; // 5 minutes
+
     public TheBot(IMediator mediator, IPageStore pageStore, ILogger<TheBot> logger,
         IFetchPageDetailsFromNos fetchPageDetailsFromNos, IFetchPagesFromNos fetchPagesFromNos, IHostEnvironment env)
     {
@@ -30,7 +32,6 @@ public class TheBot : ITheBot
 
     public async Task Run(int delayBetweenPageFetching, bool runForever, CancellationToken stoppingToken)
     {
-        var delayBetweenPageFetchingRounds = delayBetweenPageFetching * 10;
         while (!stoppingToken.IsCancellationRequested)
         {
             var relevantPages = await _fetchPagesFromNos.GetPages();
@@ -82,9 +83,9 @@ public class TheBot : ITheBot
             {
                 break;
             }
-            _logger.LogInformation("Done fetching pages, waiting {DelayBetweenPageFetchingRounds} seconds to check again...",
-                delayBetweenPageFetchingRounds / 1000);
-            await Task.Delay(delayBetweenPageFetchingRounds, stoppingToken);
+            _logger.LogInformation("Done fetching pages, waiting {Delay} seconds to check again...",
+                DelayBetweenPageFetchingRounds / 1000);
+            await Task.Delay(DelayBetweenPageFetchingRounds, stoppingToken);
         }
     }
 
