@@ -12,6 +12,7 @@ public class TheBot : ITheBot
     private readonly ILogger<TheBot> _logger;
     private readonly IFetchPageFromNos _fetchPageFromNos;
     private readonly IHostEnvironment _env;
+    private readonly IFetchPageNumbersFromNos _fetchPageNumbersFromNos;
 
     private readonly IMediator _mediator;
 
@@ -19,21 +20,31 @@ public class TheBot : ITheBot
     private const int PageNumberEnd = 150;
 
     public TheBot(IMediator mediator, IPageStore pageStore, ILogger<TheBot> logger,
-        IFetchPageFromNos fetchPageFromNos, IHostEnvironment env)
+        IFetchPageFromNos fetchPageFromNos, IFetchPageNumbersFromNos fetchPageNumbersFromNos, IHostEnvironment env)
     {
         _fetchPageFromNos = fetchPageFromNos;
         _pageStore = pageStore;
         _logger = logger;
         _env = env;
         _mediator = mediator;
+        _fetchPageNumbersFromNos = fetchPageNumbersFromNos;
     }
 
     public async Task Run(int delayBetweenPageFetching, bool runForever, CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            for (var pageNr = PageNumberStart; pageNr <= PageNumberEnd; pageNr++)
+            var relevantPageNumbers = await _fetchPageNumbersFromNos.GetNumbers();
+            
+            LogPageNumbers(relevantPageNumbers);
+            
+            foreach (var pageNr in relevantPageNumbers)
             {
+                if (pageNr is > PageNumberEnd or < PageNumberStart)
+                {
+                    continue;
+                }
+                
                 var checkIfPagesExistsInStore = _env.IsProduction();
 
                 // Retrieve screenshot and page from NOS
@@ -76,5 +87,11 @@ public class TheBot : ITheBot
                 break;
             }
         }
+    }
+
+    private void LogPageNumbers(IEnumerable<int> numbers)
+    {
+        var strNumbers = string.Join(", ", numbers);
+        _logger.LogInformation("Relevant page numbers found: {Numbers}", strNumbers);
     }
 }

@@ -30,12 +30,23 @@ public partial class TeletekstHtmlParser : ITeletekstHtmlParser
         };
     }
 
+    public List<int> RelevantPageNumbers()
+    {
+        var containerNode = _htmlDocument.DocumentNode.SelectSingleNode("//*[@id=\"teletekst\"]");
+        var elements = containerNode.SelectNodes("//a[@class='yellow' and not(@id)]");
+
+        var result = elements.Where(e => e.InnerHtml != "101")
+            .Select(e => e.InnerHtml).Select(int.Parse).ToList();
+
+        return result;
+    }
+
     public bool IsANewsPage()
     {
         var containerNode = _htmlDocument.DocumentNode.SelectSingleNode("//*[@id=\"teletekst\"]");
         return containerNode == null || !containerNode.InnerText.Contains("copyright N O S");
     }
-    
+
     private string ExtractTitle()
     {
         var titleNode = _htmlDocument.DocumentNode.SelectSingleNode("//*[@id=\"teletekst\"]/div[2]/pre/span[6]");
@@ -43,12 +54,12 @@ public partial class TeletekstHtmlParser : ITeletekstHtmlParser
         {
             return string.Empty;
         }
-        
+
         var titleText = titleNode.InnerText.Trim();
-            
+
         return WebUtility.HtmlDecode(titleText);
     }
-    
+
     private string ExtractBody()
     {
         var sb = new StringBuilder();
@@ -60,7 +71,7 @@ public partial class TeletekstHtmlParser : ITeletekstHtmlParser
         {
             return string.Empty;
         }
-        
+
         var childNodes = parentNode.ChildNodes.Skip(firstBodyNodeIndex);
         foreach (var node in childNodes)
         {
@@ -68,28 +79,28 @@ public partial class TeletekstHtmlParser : ITeletekstHtmlParser
             {
                 break;
             }
-                
+
             sb.Append(node.InnerHtml);
         }
 
         var sanitized = WebUtility.HtmlDecode(sb.ToString().Trim());
         sanitized = sanitized.Replace("\r", "").Replace("\n", "");
         sanitized = RemoveHtmlEntities(sanitized);
-        
+
         sanitized = WhitespaceRegex().Replace(sanitized, " ");
-        
+
         return sanitized;
     }
-    
+
     private static string RemoveHtmlEntities(string html)
     {
         return HtmlTagsMyRegex().Replace(html, string.Empty);
     }
-    
+
 
     [GeneratedRegex("<.*?>", RegexOptions.Compiled)]
     private static partial Regex HtmlTagsMyRegex();
-    
+
     [GeneratedRegex("\\s+", RegexOptions.Compiled)]
     private static partial Regex WhitespaceRegex();
 }

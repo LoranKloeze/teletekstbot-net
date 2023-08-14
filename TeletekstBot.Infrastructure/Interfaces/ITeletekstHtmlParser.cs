@@ -7,4 +7,6 @@ public interface ITeletekstHtmlParser
     void LoadHtml(string html);
     Page ToPage();
     bool IsANewsPage();
+
+    public List<int> RelevantPageNumbers();
 }

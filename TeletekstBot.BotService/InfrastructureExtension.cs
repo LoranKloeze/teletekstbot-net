@@ -35,6 +35,7 @@ public static class InfrastructureExtension
         serviceCollection.AddTransient<IPageStore, PageStore>();
         serviceCollection.AddSingleton<IBrowserFactory, BrowserFactory>();
         serviceCollection.AddTransient<IFetchPageFromNos, FetchPageFromNos>();
+        serviceCollection.AddTransient<IFetchPageNumbersFromNos, FetchPageNumbersFromNos>();
         serviceCollection.AddTransient<HtmlDocument>();
         serviceCollection.AddTransient<ATProtocol>(_ => new ATProtocolBuilder().EnableAutoRenewSession(true).Build());
     }

@@ -103,4 +103,20 @@ public class TeletekstHtmlParserTests
         // Assert
         Assert.That(result, Is.False);
     }
+
+    [Test]
+    public void RelevantPageNumbers_ReturnsListOfNumbers()
+    {
+        var teletekstHtmlParser = new TeletekstHtmlParser(new HtmlDocument());
+        var html = MockFile.GetFileText("full_nos_page_101.html");
+        teletekstHtmlParser.LoadHtml(html);
+        
+        var expectedNumbers = new List<int> {108,104,126,107,106,105, 136, 121, 125};
+        
+        // Act
+        var result = teletekstHtmlParser.RelevantPageNumbers();
+        
+        //Assert
+        CollectionAssert.AreEqual(expectedNumbers, result);
+    }
 }
