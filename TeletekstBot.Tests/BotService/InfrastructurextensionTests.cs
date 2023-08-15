@@ -49,7 +49,8 @@ public class InfrastructureExtensionTests
             typeof(IBrowserFactory),
             typeof(IFetchPageDetailsFromNos),
             typeof(HtmlDocument),
-            typeof(ATProtocol)
+            typeof(ATProtocol),
+            typeof(IFileStreamProvider)
             
         };
     }

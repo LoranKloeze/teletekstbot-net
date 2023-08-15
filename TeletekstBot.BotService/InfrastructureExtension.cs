@@ -38,5 +38,6 @@ public static class InfrastructureExtension
         serviceCollection.AddTransient<IFetchPagesFromNos, FetchPagesFromNos>();
         serviceCollection.AddTransient<HtmlDocument>();
         serviceCollection.AddTransient<ATProtocol>(_ => new ATProtocolBuilder().EnableAutoRenewSession(true).Build());
+        serviceCollection.AddTransient<IFileStreamProvider, FileStreamProvider>();
     }
 }
