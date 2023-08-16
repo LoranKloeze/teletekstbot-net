@@ -50,6 +50,7 @@ public partial class TeletekstHtmlParser : ITeletekstHtmlParser
             if (titleSpan == null || string.IsNullOrEmpty(titleSpan.InnerHtml)) continue;
             
             var title = WebUtility.HtmlDecode(titleSpan.InnerHtml.Trim());
+            title = RemoveHtmlEntities(title);
             pages.Add(new Page
             {
                 PageNumber = pageNumber,
@@ -74,10 +75,12 @@ public partial class TeletekstHtmlParser : ITeletekstHtmlParser
         {
             return string.Empty;
         }
+        
+        var titleText = WebUtility.HtmlDecode(titleNode.InnerText.Trim());
+        titleText = RemoveHtmlEntities(titleText);
 
-        var titleText = titleNode.InnerText.Trim();
-
-        return WebUtility.HtmlDecode(titleText);
+        return titleText;
+        
     }
 
     private string ExtractBody()

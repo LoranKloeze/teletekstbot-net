@@ -121,7 +121,7 @@ public class TeletekstHtmlParserTests
         
         var expectedPages = new List<Page>
         {
-            new () { PageNumber = 108, Title = "Yesilgöz officieel VVD-lijsttrekker" },
+            new () { PageNumber = 108, Title = "Dodental na branden Maui boven 100." },
             new () { PageNumber = 104, Title = "Honderden cryptotelefoons gekraakt." },
             new () { PageNumber = 126, Title = "Junta Niger wil president vervolgen" },
             new () { PageNumber = 107, Title = "Minister Schreinemacher is zwanger." },
