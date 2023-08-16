@@ -28,6 +28,9 @@ Each post on Bluesky and Mastodon contains:
 
 ## Admin
 
-The application contains a very light admin mode. The only thing it does, is clear 
-the 'already seen pages' cache in Redis. Run `dotnet run clear` in 
-the `TeletekstBot.BotService` project.
+The application contains a very light admin mode. 
+
+It has two actions. Run them in the `TeletekstBot.BotService` project:
+
+- `dotnet run cache-clear`: clears the cache in Redis
+- `dotnet run cache-warmup`: fills the cache in Redis with the current pages from the NOS without posting them to Mastodon or BlueSky

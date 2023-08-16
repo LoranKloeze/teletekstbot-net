@@ -2,5 +2,5 @@
 
 public interface IAdminTool
 {
-    public void Run(string[] cmdArgs);
+    public Task Run(string[] cmdArgs, CancellationToken stoppingToken);
 }

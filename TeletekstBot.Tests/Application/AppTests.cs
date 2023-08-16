@@ -43,7 +43,7 @@ public class AppTests
 
         await _app.Run(args, stoppingToken);
 
-        _adminTool.Received().Run(args);
+        _adminTool.Received().Run(args, stoppingToken);
         await _host.Received().StopAsync(stoppingToken);
     }
 }

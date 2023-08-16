@@ -59,6 +59,28 @@ public class TheBotTests
             .Publish(Arg.Is<NewPageEvent>(e => e.Page == page105 || e.Page == page106 && e.ScreenshotPath == screenshotPath),
                 CancellationToken.None);
     }
+    
+    [Test]
+    public async Task RunWithoutPublishing_ShouldNotPublishNewPages()
+    {
+        // Arrange
+        _env.EnvironmentName.Returns("Production");
+        var page = new Page { Title = "SampleTitle", Body = "Body of page"};
+        const string screenshotPath = "@X:/fake_screenshot.jpg";
+        _fetchPageDetailsFromNos.GetPageAndScreenshot(104).Returns((screenshotPath, page));
+        _pageStore.TitlePageNrExist("SampleTitle", 104).Returns(false);
+        var page104 = new Page { PageNumber = 104, Title = "SampleTitle" };
+        _fetchPagesFromNos.GetPages().Returns(new List<Page> { page104 });
+
+        const int delayBetweenPageFetching = 0;
+        const bool doPublish = false;
+
+        // Act
+        await _theBot.Run(delayBetweenPageFetching, false,doPublish, CancellationToken.None);
+
+        // Assert
+        await _mediator.DidNotReceive().Publish(Arg.Any<NewPageEvent>());
+    }
 
     [Test]
     public async Task Run_ShouldSkipExistingPages()

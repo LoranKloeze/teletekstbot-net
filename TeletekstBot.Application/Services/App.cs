@@ -31,7 +31,7 @@ public class App : IApp
         else
         {
             _logger.LogInformation("Starting admin tool");
-            _adminTool.Run(args);
+            await _adminTool.Run(args, stoppingToken);
             await _host.StopAsync(stoppingToken);
         }
     }

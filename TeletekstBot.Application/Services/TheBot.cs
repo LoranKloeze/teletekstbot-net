@@ -32,6 +32,11 @@ public class TheBot : ITheBot
 
     public async Task Run(int delayBetweenPageFetching, bool runForever, CancellationToken stoppingToken)
     {
+        await Run(delayBetweenPageFetching, runForever, true, stoppingToken);
+    }
+
+    public async Task Run(int delayBetweenPageFetching, bool runForever, bool doPublish, CancellationToken stoppingToken)
+    {
         while (!stoppingToken.IsCancellationRequested)
         {
             var relevantPages = await _fetchPagesFromNos.GetPages();
@@ -71,8 +76,16 @@ public class TheBot : ITheBot
                 _pageStore.SaveTitlePageNr(page.Title, page.PageNumber);
 
                 // Publish the page
-                await _mediator.Publish(new NewPageEvent(page, screenshotPath), stoppingToken);
-                _logger.LogInformation("Done publishing page {PageNr} with title '{Title}'", page.PageNumber, page.Title);
+                if (doPublish)
+                {
+                    await _mediator.Publish(new NewPageEvent(page, screenshotPath), stoppingToken);
+                    _logger.LogInformation("Done publishing page {PageNr} with title '{Title}'", page.PageNumber, page.Title);
+                }
+                else
+                {
+                    _logger.LogInformation("Not publishing {PageNr} with title '{Title}'", page.PageNumber, page.Title);
+                }
+                
 
                 // Wait a bit to prevent any rate limiting
                 await Task.Delay(delayBetweenPageFetching, stoppingToken);
