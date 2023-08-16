@@ -20,7 +20,7 @@ public class FetchPageDetailsFromNos : IFetchPageDetailsFromNos
     
     // Clip of the area we want to screenshot
     private const int ClipWidth = 370;
-    private const int ClipHeight = 460;
+    private const int ClipHeight = 410;
     private const int ClipStartX = 40;
     private const int ClipStartY = 330;
     
