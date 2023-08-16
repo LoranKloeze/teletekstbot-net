@@ -10,7 +10,7 @@ public class AdminToolTests
 {
 
     [Test]
-    public void Run_ClearCommand_CallsClearAllPages()
+    public async Task Run_ClearCommand_CallsClearAllPages()
     {
         // Arrange
         var logger = Substitute.For<ILogger<AdminTool>>();
@@ -21,14 +21,14 @@ public class AdminToolTests
         var cmdArgs = new[] { "someArg", "cache-clear" };
 
         // Act
-        adminTool.Run(cmdArgs, CancellationToken.None);
+        await adminTool.Run(cmdArgs, CancellationToken.None);
 
         // Assert
         pageStore.Received(1).ClearAllPages();
     }
     
     [Test]
-    public void Run_WarmupCommand_CallsTheBotWithoutPublishing()
+    public async Task Run_WarmupCommand_CallsTheBotWithoutPublishing()
     {
         // Arrange
         var logger = Substitute.For<ILogger<AdminTool>>();
@@ -42,10 +42,10 @@ public class AdminToolTests
         const bool expectedDoPublish = false;
 
         // Act
-        adminTool.Run(cmdArgs, CancellationToken.None);
+        await adminTool.Run(cmdArgs, CancellationToken.None);
 
         // Assert
-        theBot.Received(1).Run(expectedDelay, false, expectedDoPublish, CancellationToken.None);
+        await theBot.Received(1).Run(expectedDelay, false, expectedDoPublish, CancellationToken.None);
     }
     
     [Test]
@@ -60,7 +60,7 @@ public class AdminToolTests
         var cmdArgs = new[] { "someArg", "nonexistingcmd" };
         
         // Act and Assert
-        Assert.DoesNotThrow(() => adminTool.Run(cmdArgs, CancellationToken.None));
+        Assert.DoesNotThrowAsync(async () => await adminTool.Run(cmdArgs, CancellationToken.None) );
     }
 
 
