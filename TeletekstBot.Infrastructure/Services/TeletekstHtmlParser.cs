@@ -38,11 +38,13 @@ public partial class TeletekstHtmlParser : ITeletekstHtmlParser
         var pageLinkElements = containerNode.SelectNodes("//a[@class='yellow' and not(@id)]");
         
         var pages = new List<Page>();
+        var nrsSeen = new List<int>();
 
         foreach (var pageLinkElement in pageLinkElements)
         {
             if (!int.TryParse(pageLinkElement.InnerHtml, out var pageNumber)) continue;
             if (pageNumber is < 104 or > 199) continue;
+            if (nrsSeen.Contains(pageNumber)) continue;
 
             var titleSpan = pageLinkElement.ParentNode?.PreviousSibling;
             if (titleSpan == null || string.IsNullOrEmpty(titleSpan.InnerHtml)) continue;
@@ -53,6 +55,7 @@ public partial class TeletekstHtmlParser : ITeletekstHtmlParser
                 PageNumber = pageNumber,
                 Title = title
             });
+            nrsSeen.Add(pageNumber);
         }
 
         return pages;
