@@ -76,6 +76,7 @@ public partial class TeletekstHtmlParser : ITeletekstHtmlParser
         }
 
         var titleText = titleNode.InnerText.Trim();
+	titleText = Regex.Replace(titleText, "<.*?>", String.Empty);
 
         return WebUtility.HtmlDecode(titleText);
     }
