@@ -3,6 +3,7 @@ using Mastonet.Entities;
 using Microsoft.Extensions.Logging;
 using TeletekstBot.Application.Interfaces;
 using TeletekstBot.Domain.Entities;
+using TeletekstBot.Infrastructure.Extensions;
 
 namespace TeletekstBot.Infrastructure.Services;
 
@@ -19,7 +20,7 @@ public class MastodonService : IMastodonService
     {
         _logger.LogInformation("[Mastodon] Posting page {PageNr} with title '{Title}'", page.PageNumber, page.Title);
 
-        var attachment = await _mastodonClient.UploadMedia(screenshotStream, "screenshot.jpg", page.Body, new AttachmentFocusData
+        var attachment = await _mastodonClient.UploadMedia(screenshotStream, "screenshot.jpg", page.Body.AddSpacesWhenApplicable(), new AttachmentFocusData
         {
             X = 0.0,
             Y = 1.0

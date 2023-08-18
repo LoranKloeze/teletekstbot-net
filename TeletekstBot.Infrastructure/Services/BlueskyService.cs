@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using TeletekstBot.Application.Interfaces;
 using TeletekstBot.Domain.Entities;
+using TeletekstBot.Infrastructure.Extensions;
 using MediaTypeHeaderValue = System.Net.Http.Headers.MediaTypeHeaderValue;
 
 namespace TeletekstBot.Infrastructure.Services;
@@ -81,6 +82,6 @@ public class BlueSkyService : IBlueSkyService
         var facet = new Facet(index, link);
 
         await _atProtocol.Repo.CreatePostAsync(body, new[] { facet },
-            new ImagesEmbed(screenshot, page.Body), cancellationToken: stoppingToken);
+            new ImagesEmbed(screenshot, page.Body.AddSpacesWhenApplicable()), cancellationToken: stoppingToken);
     }
 }
