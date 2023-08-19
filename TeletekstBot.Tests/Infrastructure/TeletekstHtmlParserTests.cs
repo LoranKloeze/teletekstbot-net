@@ -164,4 +164,19 @@ public class TeletekstHtmlParserTests
         //Assert
         CollectionAssert.AreEqual(expectedPages, result);
     }
+    
+    [Test]
+    public void AddSpacesWhenApplicable_GivenTextWithCharactersWithoutTrailingSpaces_ReturnsTextWithSpaces()
+    {
+        // Arrange
+        var testString =
+            "This is a text without spaces after certain characters.The spaces must be added,so let's try it:are we successful? Let's find out.";
+        var expectedResult =
+            "This is a text without spaces after certain characters. The spaces must be added, so let's try it: are we successful? Let's find out.";
+        
+        // Act
+        var result = TeletekstHtmlParser.AddSpacesWhenApplicable(testString);
+        
+        Assert.That(result, Is.EqualTo(expectedResult));
+    }
 }

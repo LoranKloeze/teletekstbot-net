@@ -11,6 +11,9 @@ public partial class TeletekstHtmlParser : ITeletekstHtmlParser
 {
     private readonly HtmlDocument _htmlDocument;
 
+    // Define the characters that need a space afterwards
+    private const string AddSpacesAfterChars = ".,:";
+
     public TeletekstHtmlParser(HtmlDocument htmlDocument)
     {
         _htmlDocument = htmlDocument;
@@ -112,6 +115,8 @@ public partial class TeletekstHtmlParser : ITeletekstHtmlParser
 
         sanitized = WhitespaceRegex().Replace(sanitized, " ");
 
+        sanitized = AddSpacesWhenApplicable(sanitized);
+        
         return sanitized;
     }
 
@@ -120,6 +125,17 @@ public partial class TeletekstHtmlParser : ITeletekstHtmlParser
         return HtmlTagsMyRegex().Replace(html, string.Empty);
     }
 
+    public static string AddSpacesWhenApplicable(string str)
+    {
+        var sb = new StringBuilder(str, str.Length * 2);
+        foreach (var character in AddSpacesAfterChars)
+        {
+            sb.Replace(character + " ", character.ToString())       // In case there is a character with a space after it, replace it with the character only
+                .Replace(character.ToString(), character + " ");    // Replace the character with the character and a space    
+        }
+
+        return sb.ToString().TrimEnd();
+    }
 
     [GeneratedRegex("<.*?>", RegexOptions.Compiled)]
     private static partial Regex HtmlTagsMyRegex();
