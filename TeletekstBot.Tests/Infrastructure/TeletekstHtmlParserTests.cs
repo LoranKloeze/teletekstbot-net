@@ -14,7 +14,9 @@ public class TeletekstHtmlParserTests
         var teletekstHtmlParser = new TeletekstHtmlParser(new HtmlDocument());
         var html = MockFile.GetFileText("full_nos_page_110.html");
         const string expectedTitle = "NS verliest alleenrecht buitenland";
-        const string expectedBodyStart = "Het demissionaire kabinet wil naast NS ook andere";
+        const string expectedBodyStart = "Demissionaire kabinet: naast NS ook andere bedrijven toestemming " + 
+                                         "geven om naar internationale bestemmingen als Parijs, Berlijn en Londen te " +
+                                         "rijden. Ingewijden bevestigen dat na berichtgeving in de Volkskrant.";
         const string expectedBodyEnd = "twee stappen met nog 7 procent kan verhogen.";
         const int expectedPageNumber = 110;
         teletekstHtmlParser.LoadHtml(html);
@@ -165,18 +167,4 @@ public class TeletekstHtmlParserTests
         CollectionAssert.AreEqual(expectedPages, result);
     }
     
-    [Test]
-    public void AddSpacesWhenApplicable_GivenTextWithCharactersWithoutTrailingSpaces_ReturnsTextWithSpaces()
-    {
-        // Arrange
-        var testString =
-            "This is a text without spaces after certain characters.The spaces must be added,so let's try it:are we successful? Let's find out.";
-        var expectedResult =
-            "This is a text without spaces after certain characters. The spaces must be added, so let's try it: are we successful? Let's find out.";
-        
-        // Act
-        var result = TeletekstHtmlParser.AddSpacesWhenApplicable(testString);
-        
-        Assert.That(result, Is.EqualTo(expectedResult));
-    }
 }

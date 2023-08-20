@@ -125,7 +125,7 @@ public partial class TeletekstHtmlParser : ITeletekstHtmlParser
         return HtmlTagsMyRegex().Replace(html, string.Empty);
     }
 
-    public static string AddSpacesWhenApplicable(string str)
+    private static string AddSpacesWhenApplicable(string str)
     {
         var sb = new StringBuilder(str, str.Length * 2);
         foreach (var character in AddSpacesAfterChars)
