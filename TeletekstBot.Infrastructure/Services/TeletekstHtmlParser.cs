@@ -89,7 +89,7 @@ public partial class TeletekstHtmlParser : ITeletekstHtmlParser
     private string ExtractBody()
     {
         var sb = new StringBuilder();
-        const string specialEofBodyChar = "\xF020";
+        string[] specialEofBodyChars = { "\xF020", "&#xF020;" };
         const int firstBodyNodeIndex = 13;
 
         var parentNode = _htmlDocument.DocumentNode.SelectSingleNode("//*[@id=\"teletekst\"]/div[2]/pre");
@@ -101,7 +101,7 @@ public partial class TeletekstHtmlParser : ITeletekstHtmlParser
         var childNodes = parentNode.ChildNodes.Skip(firstBodyNodeIndex);
         foreach (var node in childNodes)
         {
-            if (node.InnerHtml.StartsWith(specialEofBodyChar))
+            if (specialEofBodyChars.Any(chr => node.InnerHtml.StartsWith(chr)))
             {
                 break;
             }
