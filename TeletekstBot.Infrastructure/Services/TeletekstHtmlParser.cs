@@ -12,7 +12,7 @@ public partial class TeletekstHtmlParser : ITeletekstHtmlParser
     private readonly HtmlDocument _htmlDocument;
 
     // Define the characters that need a space afterwards
-    private const string AddSpacesAfterChars = ".,:";
+    private const string CharsRequiringTrailingSpace = ".,:";
 
     public TeletekstHtmlParser(HtmlDocument htmlDocument)
     {
@@ -128,7 +128,7 @@ public partial class TeletekstHtmlParser : ITeletekstHtmlParser
     private static string AddSpacesWhenApplicable(string str)
     {
         var sb = new StringBuilder(str, str.Length * 2);
-        foreach (var character in AddSpacesAfterChars)
+        foreach (var character in CharsRequiringTrailingSpace)
         {
             sb.Replace(character + " ", character.ToString())       // In case there is a character with a space after it, replace it with the character only
                 .Replace(character.ToString(), character + " ");    // Replace the character with the character and a space    
