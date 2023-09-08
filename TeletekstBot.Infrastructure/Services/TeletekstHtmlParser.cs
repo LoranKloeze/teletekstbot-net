@@ -81,6 +81,8 @@ public partial class TeletekstHtmlParser : ITeletekstHtmlParser
         
         var titleText = WebUtility.HtmlDecode(titleNode.InnerText.Trim());
         titleText = RemoveHtmlEntities(titleText);
+        
+        titleText = titleText.TrimEnd('.').Trim();
 
         return titleText;
         
