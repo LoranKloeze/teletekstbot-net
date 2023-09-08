@@ -70,9 +70,4 @@ jobs:
       - name: Run docker compose build
         run: |
           ssh -A ${{ vars.SSH_USER}}@${{ secrets.REMOTE_HOST }} "cd /apps/teletekstbot-net && docker compose build"
-          
-      - name: Run docker compose restart
-        run: |
-          ssh -A ${{ vars.SSH_USER}}@${{ secrets.REMOTE_HOST }} "cd /apps/teletekstbot-net && docker compose down"
-          ssh -A ${{ vars.SSH_USER}}@${{ secrets.REMOTE_HOST }} "cd /apps/teletekstbot-net && docker compose up -d"
     

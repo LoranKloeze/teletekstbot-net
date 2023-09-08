@@ -34,3 +34,9 @@ It has two actions. Run them in the `TeletekstBot.BotService` project:
 
 - `dotnet run cache-clear`: clears the cache in Redis
 - `dotnet run cache-warmup`: fills the cache in Redis with the current pages from the NOS without posting them to Mastodon or BlueSky
+
+## Deploying
+After pushing to `master`, the application is tested, built and deployed to the 
+VPS. Restarting is NOT done automatically, so there is a chance to warm up the 
+cache or run other admin tasks. Restarting is done by running the 
+GitHub action `Restart app`.
