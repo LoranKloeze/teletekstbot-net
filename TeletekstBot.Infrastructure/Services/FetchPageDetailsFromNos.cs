@@ -68,6 +68,7 @@ public class FetchPageDetailsFromNos : IFetchPageDetailsFromNos
         });
         await browserPage.GoToAsync(url);
         await browserPage.WaitForNetworkIdleAsync();
+        await browserPage.EvaluateExpressionAsync("document.body.style.backgroundColor = '#000'");
 
         return browserPage;
     }
