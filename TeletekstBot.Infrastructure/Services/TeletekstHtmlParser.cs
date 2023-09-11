@@ -52,8 +52,7 @@ public partial class TeletekstHtmlParser : ITeletekstHtmlParser
             var titleSpan = pageLinkElement.ParentNode?.PreviousSibling;
             if (titleSpan == null || string.IsNullOrEmpty(titleSpan.InnerHtml)) continue;
             
-            var title = WebUtility.HtmlDecode(titleSpan.InnerHtml.Trim());
-            title = RemoveHtmlEntities(title);
+            var title = CleanTitle(titleSpan.InnerHtml);
             pages.Add(new Page
             {
                 PageNumber = pageNumber,
@@ -74,18 +73,7 @@ public partial class TeletekstHtmlParser : ITeletekstHtmlParser
     private string ExtractTitle()
     {
         var titleNode = _htmlDocument.DocumentNode.SelectSingleNode("//*[@id=\"teletekst\"]/div[2]/pre/span[6]");
-        if (titleNode == null)
-        {
-            return string.Empty;
-        }
-        
-        var titleText = WebUtility.HtmlDecode(titleNode.InnerText.Trim());
-        titleText = RemoveHtmlEntities(titleText);
-        
-        titleText = titleText.TrimEnd('.').Trim();
-
-        return titleText;
-        
+        return titleNode == null ? string.Empty : CleanTitle(titleNode.InnerText);
     }
 
     private string ExtractBody()
@@ -137,6 +125,15 @@ public partial class TeletekstHtmlParser : ITeletekstHtmlParser
         }
 
         return sb.ToString().TrimEnd();
+    }
+
+    private static string CleanTitle(string title)
+    {
+        var cleanedTitle = WebUtility.HtmlDecode(title.Trim());
+        cleanedTitle = RemoveHtmlEntities(cleanedTitle);
+        cleanedTitle = cleanedTitle.TrimEnd('.').Trim();
+
+        return cleanedTitle;
     }
 
     [GeneratedRegex("<.*?>", RegexOptions.Compiled)]
